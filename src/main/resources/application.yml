@@ -1,0 +1,17 @@
+spring:
+  data:
+    jdbc:
+      repositories:
+        enabled: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/cinema?serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+    username: cinemadmin
+    password: pass4cinemadmin
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+server:
+  error:
+    include-stacktrace: never
+  port: 8080
