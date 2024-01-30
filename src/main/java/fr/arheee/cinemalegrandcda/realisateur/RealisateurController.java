@@ -20,7 +20,7 @@ public class RealisateurController {
         return realisateurService.findAll();
     }
 
-    @GetMapping
+    @PostMapping
     public Realisateur save(@RequestBody Realisateur realisateur) {
         return realisateurService.save(realisateur);
     }
