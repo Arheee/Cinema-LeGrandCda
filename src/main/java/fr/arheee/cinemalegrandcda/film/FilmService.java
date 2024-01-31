@@ -1,5 +1,9 @@
 package fr.arheee.cinemalegrandcda.film;
 
+import fr.arheee.cinemalegrandcda.acteur.Acteur;
+import fr.arheee.cinemalegrandcda.acteur.dto.ActeurReduitDto;
+import fr.arheee.cinemalegrandcda.acteur.dto.ActeurSansFilmDto;
+import fr.arheee.cinemalegrandcda.realisateur.Realisateur;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -58,5 +62,19 @@ public class FilmService {
                         "Aucun film avec ce réalisateur"
                 )
         );
+    }
+
+    public List<Acteur> getActeursByFilmId(Integer id) {
+        Film film = findById(id);
+        return film.getActeurs();
+    }
+
+    public Realisateur getRealisateurByFilmId(Integer id){
+        Film film = findById(id);
+        return  film.getRealisateur();
+    }
+
+    public List<Film> getFilmByRealisateurId(Integer id) {
+        return filmRepository.getFilmByRealisateurId(id);
     }
 }

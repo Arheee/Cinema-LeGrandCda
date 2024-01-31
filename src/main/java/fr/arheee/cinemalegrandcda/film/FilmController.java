@@ -1,8 +1,12 @@
 package fr.arheee.cinemalegrandcda.film;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.arheee.cinemalegrandcda.acteur.Acteur;
+import fr.arheee.cinemalegrandcda.acteur.dto.ActeurSansFilmDto;
 import fr.arheee.cinemalegrandcda.film.dto.FilmCompletDto;
 import fr.arheee.cinemalegrandcda.film.dto.FilmReduitDto;
+import fr.arheee.cinemalegrandcda.realisateur.Realisateur;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,6 +55,21 @@ public class FilmController {
     @GetMapping("/search") //films/search?titre=toto
     public Film findByTitre(@RequestParam String titre) {
         return filmService.findByTitre(titre);
+    }
+
+    @GetMapping("/{id}/acteurs")
+    public List<ActeurSansFilmDto> getActeursByFilmId(@PathVariable Integer id) {
+        List<Acteur> acteurs = filmService.getActeursByFilmId(id);
+        return acteurs.stream().map(
+                acteur -> objectMapper.convertValue(acteur, ActeurSansFilmDto.class)
+        ).toList();
+
+    }
+
+    @GetMapping("/{id}/realisateur")
+    public Realisateur getRealisateurByFilmId(@PathVariable Integer id) {
+       Realisateur realisateur = filmService.getRealisateurByFilmId(id);
+       return objectMapper.convertValue(realisateur, Realisateur.class);
     }
 }
 

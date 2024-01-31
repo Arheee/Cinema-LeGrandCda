@@ -1,5 +1,6 @@
 package fr.arheee.cinemalegrandcda.film;
 
+import fr.arheee.cinemalegrandcda.film.dto.FilmReduitDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -14,4 +15,7 @@ public interface FilmRepository extends JpaRepository<Film, Integer> {
 
     // va faire une requete du genre SELECT * FROM film WHERE rea_id ...
     Optional<List<Film>> findAllByRealisateurId(Integer id);
+
+    List<Film> getFilmByRealisateurId(Integer id);
+
 }

@@ -1,5 +1,12 @@
 package fr.arheee.cinemalegrandcda.acteur;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.arheee.cinemalegrandcda.acteur.dto.ActeurReduitDto;
+import fr.arheee.cinemalegrandcda.acteur.dto.ActeurSansFilmDto;
+import fr.arheee.cinemalegrandcda.film.Film;
+import fr.arheee.cinemalegrandcda.film.dto.FilmCompletDto;
+import fr.arheee.cinemalegrandcda.film.dto.FilmReduitDto;
+import fr.arheee.cinemalegrandcda.film.dto.FilmSansActeursDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -8,14 +15,19 @@ import java.util.List;
 @RequestMapping("/acteurs")
 public class ActeurController {
     private final ActeurService acteurService;
+    private final ObjectMapper objectMapper;
 
-    public ActeurController(ActeurService acteurService) {
+
+    public ActeurController(ActeurService acteurService, ObjectMapper objectMapper) {
         this.acteurService = acteurService;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping
-    public List<Acteur> findAll() {
-        return acteurService.findAll();
+    public List<ActeurSansFilmDto> findAll() {
+        return acteurService.findAll().stream().map(
+                acteur -> objectMapper.convertValue(acteur, ActeurSansFilmDto.class)
+                ).toList();
     }
     @PostMapping
     public Acteur save(@RequestBody Acteur acteur) {
@@ -23,8 +35,9 @@ public class ActeurController {
     }
 
     @GetMapping("/{id}")
-    public Acteur findById(@PathVariable Integer id) {
-        return acteurService.findById(id);
+    public ActeurReduitDto findById(@PathVariable Integer id) {
+        Acteur acteur =  acteurService.findById(id);
+        return objectMapper.convertValue(acteur, ActeurReduitDto.class);
     }
 
     @DeleteMapping("/{id}")
@@ -36,4 +49,6 @@ public class ActeurController {
     public Acteur update(@RequestBody Acteur acteur) {
         return acteurService.update(acteur);
     }
+
+
 }

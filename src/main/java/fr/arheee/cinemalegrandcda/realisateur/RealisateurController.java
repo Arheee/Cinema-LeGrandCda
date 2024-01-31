@@ -1,5 +1,11 @@
 package fr.arheee.cinemalegrandcda.realisateur;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.arheee.cinemalegrandcda.film.Film;
+import fr.arheee.cinemalegrandcda.film.dto.FilmReduitDto;
+import fr.arheee.cinemalegrandcda.film.dto.FilmSansActeursDto;
+import fr.arheee.cinemalegrandcda.film.dto.FilmTresReduitDto;
+import fr.arheee.cinemalegrandcda.realisateur.dto.RealisateurAvecFilmsDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,10 +15,12 @@ import java.util.List;
 public class RealisateurController {
 
     private final RealisateurService realisateurService;
+    private final ObjectMapper objectMapper;
 
 
-    public RealisateurController(RealisateurService realisateurService) {
+    public RealisateurController(RealisateurService realisateurService, ObjectMapper objectMapper) {
         this.realisateurService = realisateurService;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping
@@ -26,8 +34,8 @@ public class RealisateurController {
     }
 
     @GetMapping("/{id}")
-    public Realisateur findById(@PathVariable Integer id) {
-        return realisateurService.findById(id);
+    public RealisateurAvecFilmsDto findById(@PathVariable Integer id) {
+       return realisateurService.getFilmFromRealisateur(id);
     }
 
     @DeleteMapping("/{id}")
@@ -38,5 +46,13 @@ public class RealisateurController {
     @PutMapping
     public Realisateur update(@RequestBody Realisateur realisateur) {
         return realisateurService.update(realisateur);
+    }
+
+    @GetMapping("/{id}/films")
+    public List<FilmTresReduitDto> getFilmByRealisateurId(@PathVariable Integer id) {
+        List<Film> films =  realisateurService.getFilmByRealisateurId(id);
+        return films.stream().map(
+                film -> objectMapper.convertValue(film, FilmTresReduitDto.class)
+        ).toList();
     }
 }
