@@ -18,8 +18,7 @@ import java.util.List;
 @Table(name = "acteur")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id"
-)
+        property = "id")
 public class Acteur {
     @Id
     @GeneratedValue
@@ -28,8 +27,7 @@ public class Acteur {
     private String prenom;
 
     @ManyToMany(
-            mappedBy = "acteurs",
-            cascade = CascadeType.PERSIST
+            mappedBy = "acteurs"
     )
     private List<Film> films = new ArrayList<>();
 }

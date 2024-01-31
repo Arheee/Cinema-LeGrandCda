@@ -14,15 +14,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity //stocker en BDD au demarrage et crer une table
+@Entity //stocker en BDD au demarrage et creer une table
 @Getter
 @Setter
 @NoArgsConstructor
 @Table(name = "film")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id"
-)
+        property = "id")
 public class Film {
 
     @Id
@@ -41,13 +40,12 @@ public class Film {
     @Column(nullable = false, length = 500)
     private  String synopsis;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    //endroit ou declarer attribut stocke la clé etrangere One concerne la table
+    @ManyToOne
     // Many Films to One Realisateur
     @JoinColumn(name = "realisateur_id")
     private Realisateur realisateur;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany
     // Many Films to Many Acteurs
     @JoinTable(
             name = "acteur_film",
