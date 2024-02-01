@@ -53,4 +53,5 @@ public class Film {
             inverseJoinColumns = @JoinColumn(name = "acteur_id")
     )
     private List<Acteur> acteurs= new ArrayList<>();
+
 }

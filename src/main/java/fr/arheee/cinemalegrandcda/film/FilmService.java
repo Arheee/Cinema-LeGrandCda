@@ -1,8 +1,11 @@
 package fr.arheee.cinemalegrandcda.film;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.arheee.cinemalegrandcda.acteur.Acteur;
+import fr.arheee.cinemalegrandcda.acteur.ActeurService;
 import fr.arheee.cinemalegrandcda.acteur.dto.ActeurReduitDto;
 import fr.arheee.cinemalegrandcda.acteur.dto.ActeurSansFilmDto;
+import fr.arheee.cinemalegrandcda.film.dto.FilmCompletDto;
 import fr.arheee.cinemalegrandcda.realisateur.Realisateur;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,9 +17,13 @@ import java.util.Optional;
 @Service
 public class FilmService {
     private final FilmRepository filmRepository;
+    private final ActeurService acteurService;
+    private final ObjectMapper objectMapper;
 
-    public FilmService(FilmRepository filmRepository) {
+    public FilmService(FilmRepository filmRepository, ActeurService acteurService, ObjectMapper objectMapper) {
         this.filmRepository = filmRepository;
+        this.acteurService = acteurService;
+        this.objectMapper = objectMapper;
     }
 
     //appel du service
@@ -77,4 +84,12 @@ public class FilmService {
     public List<Film> getFilmByRealisateurId(Integer id) {
         return filmRepository.getFilmByRealisateurId(id);
     }
+
+    public Film addActeurToFilm(Integer id, Acteur acteur) {
+        Film film = findById(id);
+        Acteur acteurTrouve = acteurService.findById(acteur.getId());
+        film.getActeurs().add(acteurTrouve);
+       return filmRepository.save(film);
+    }
+
 }

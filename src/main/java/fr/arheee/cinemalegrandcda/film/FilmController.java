@@ -71,5 +71,11 @@ public class FilmController {
        Realisateur realisateur = filmService.getRealisateurByFilmId(id);
        return objectMapper.convertValue(realisateur, Realisateur.class);
     }
+
+    @PostMapping("/{id}/acteurs")
+    public Film addActeurToFilm(@PathVariable Integer id,@RequestBody Acteur acteur) {
+        Film film = filmService.addActeurToFilm(id, acteur);
+         return filmService.save(film);
+    }
 }
 
