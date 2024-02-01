@@ -39,7 +39,20 @@ public class FilmController {
     @GetMapping("/{id}") //si on veut passer une ressource en particulier
     public FilmCompletDto findById(@PathVariable Integer id) {
         Film film =  filmService.findById(id);
-        return objectMapper.convertValue(film, FilmCompletDto.class);
+        FilmCompletDto filmCompletDto = new FilmCompletDto();
+        filmCompletDto.setId(film.getId());
+        filmCompletDto.setDuree(film.getDuree());
+        filmCompletDto.setSynopsis(film.getSynopsis());
+        filmCompletDto.setRealisateur(film.getRealisateur());
+        filmCompletDto.setDateSortie(film.getDateSortie());
+        filmCompletDto.setActeurs(
+                film.getActeurs().stream().map(
+                        acteur -> objectMapper.convertValue(acteur, ActeurSansFilmDto.class)
+                ).toList()
+        );
+
+
+        return filmCompletDto;
     }
 
     @DeleteMapping("/{id}")
