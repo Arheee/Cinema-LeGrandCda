@@ -42,4 +42,14 @@ public class SalleService {
     public Salle update(Salle salle){
         return salleRepository.save(salle);
     }
+
+    public int findCapaciteById(Integer id) {
+        Salle salle = salleRepository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Aucune salle avec cet ID"
+                )
+        );
+        return salle.getCapacite();
+    }
 }
