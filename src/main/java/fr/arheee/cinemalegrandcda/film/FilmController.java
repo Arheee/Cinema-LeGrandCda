@@ -6,7 +6,9 @@ import fr.arheee.cinemalegrandcda.acteur.dto.ActeurSansFilmDto;
 import fr.arheee.cinemalegrandcda.film.dto.FilmCompletDto;
 import fr.arheee.cinemalegrandcda.film.dto.FilmReduitDto;
 import fr.arheee.cinemalegrandcda.realisateur.Realisateur;
+import org.apache.coyote.BadRequestException;
 import org.springframework.data.relational.core.sql.In;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +34,8 @@ public class FilmController {
     }
 
     @PostMapping
-    public Film save(@RequestBody Film film) {
+    @ResponseStatus(HttpStatus.CREATED) //201 ca sest bien passé , cest legerement différent de 200
+    public Film save(@RequestBody Film film) throws BadRequestException {
         return filmService.save(film);
     }
 
@@ -86,9 +89,24 @@ public class FilmController {
     }
 
     @PostMapping("/{id}/acteurs")
-    public Film addActeurToFilm(@PathVariable Integer id,@RequestBody Acteur acteur) {
+    public FilmCompletDto addActeurToFilm(@PathVariable Integer id,@RequestBody Acteur acteur) {
         Film film = filmService.addActeurToFilm(id, acteur);
-         return filmService.save(film);
+
+        FilmCompletDto filmCompletDto = new FilmCompletDto();
+        filmCompletDto.setId(film.getId());
+        filmCompletDto.setDuree(film.getDuree());
+        filmCompletDto.setRealisateur(film.getRealisateur());
+        filmCompletDto.setDateSortie(film.getDateSortie());
+        filmCompletDto.setSynopsis(film.getSynopsis());
+        filmCompletDto.setActeurs(
+                film.getActeurs().stream().map(
+                        unmappedActor -> objectMapper.convertValue(
+                                unmappedActor,
+                                ActeurSansFilmDto.class
+                )).toList()
+        );
+
+         return filmCompletDto;
     }
 }
 

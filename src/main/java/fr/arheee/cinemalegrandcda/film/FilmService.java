@@ -6,11 +6,14 @@ import fr.arheee.cinemalegrandcda.acteur.ActeurService;
 import fr.arheee.cinemalegrandcda.acteur.dto.ActeurReduitDto;
 import fr.arheee.cinemalegrandcda.acteur.dto.ActeurSansFilmDto;
 import fr.arheee.cinemalegrandcda.film.dto.FilmCompletDto;
+import fr.arheee.cinemalegrandcda.film.exceptions.FilmNotFoundException;
 import fr.arheee.cinemalegrandcda.realisateur.Realisateur;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,14 +34,31 @@ public class FilmService {
         return filmRepository.findAll();
     }
 
-    public Film save(Film film) {
+    public Film save(Film film) throws BadRequestException {
+        verifyFilm(film);
+
         return filmRepository.save(film);
+    }
+
+    private static void verifyFilm(Film film) throws BadRequestException {
+        List<String> erreurs = new ArrayList<>();
+        if(film.getTitre() == null){
+        throw new BadRequestException("le titre est obligatoire");
+        }
+        if(film.getDateSortie() == null){
+         throw new BadRequestException("la date est obligatoire");
+        }
+        if(film.getRealisateur() == null){
+         throw new BadRequestException("le realisateur est obligatoire");
+        }
+        if(!erreurs.isEmpty()){
+            throw new BadRequestException(String.valueOf(erreurs));
+        }
     }
 
     public Film findById(Integer id) {
         return filmRepository.findById(id).orElseThrow(
-                ()-> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Film non trouvé")
+                ()-> new FilmNotFoundException(id)
         );
     }
 
