@@ -4,7 +4,11 @@ Un projet basé sur Spring Boot
 qui gère les informations sur les films, 
 les acteurs et les réalisateurs pour le cinema le plus prestigieux du monde,
 J'ai nommé le GRAND CDA evidemment. . . 
-![1.png](img%2F1.png)
+
+
+https://github.com/Arheee/Cinema-LeGrandCda/assets/125261469/870c51ba-c83a-4db3-bab9-7d3b85478e66
+
+
 ## Prérequis
 
 - Java Spring 
