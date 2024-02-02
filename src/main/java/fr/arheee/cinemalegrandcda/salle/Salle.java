@@ -20,7 +20,6 @@ public class Salle {
 
     @Column(length = 500)
     private String nom;
-
     private int numero;
     private int capacite;
 

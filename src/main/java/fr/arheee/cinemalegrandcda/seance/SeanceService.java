@@ -3,12 +3,16 @@ package fr.arheee.cinemalegrandcda.seance;
 import fr.arheee.cinemalegrandcda.film.FilmService;
 import fr.arheee.cinemalegrandcda.salle.Salle;
 import fr.arheee.cinemalegrandcda.salle.SalleService;
+import fr.arheee.cinemalegrandcda.ticket.Ticket;
+import fr.arheee.cinemalegrandcda.ticket.TicketService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SeanceService {
@@ -16,30 +20,23 @@ public class SeanceService {
     private final SalleService salleService;
     private final FilmService filmService;
 
+
     public SeanceService(SeanceRepository seanceRepository, SalleService salleService, FilmService filmService) {
         this.seanceRepository = seanceRepository;
         this.salleService = salleService;
         this.filmService = filmService;
+
     }
 
     public Seance save(Seance seance){
-        salleService.findById(seance.getSalle().getId());
+        Salle salle = salleService.findById(seance.getSalle().getId());
         filmService.findById(seance.getFilm().getId());
-
         verifySeance(seance);
-
-        int capaciteSalle = salleService.findCapaciteById(seance.getSalle().getId());
-        int placesDejaReservees = seanceRepository.countBySalleId(seance.getSalle().getId());
-
-        if ( capaciteSalle -placesDejaReservees < 1){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "La salle est pleine pour cette seance"
-            );
-        }
-        seance.setPlaceDisponible(capaciteSalle - placesDejaReservees);
+        int capaciteSalle = salle.getCapacite();
+        seance.setPlaceDisponible(capaciteSalle);
         return seanceRepository.save(seance);
     }
+
 
     private static void verifySeance(Seance seance) {
         //Verifie si la date est dans le futur

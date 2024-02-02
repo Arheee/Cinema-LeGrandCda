@@ -1,6 +1,8 @@
 package fr.arheee.cinemalegrandcda.seance;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.arheee.cinemalegrandcda.realisateur.Realisateur;
+import fr.arheee.cinemalegrandcda.seance.dto.FilmSeanceTestDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,13 +26,17 @@ public class SeanceController {
     }
 
     @GetMapping
-    public List<Seance> findAll() {
-        return seanceService.findAll();
+    public List<FilmSeanceTestDto> findAll() {
+        List<Seance> seances = seanceService.findAll();
+        return seances.stream().map(
+                seance -> objectMapper.convertValue(seance, FilmSeanceTestDto.class)
+        ).toList();
     }
 
     @GetMapping("/{id}")
-    public Seance findById(@PathVariable Integer id) {
-        return seanceService.findById(id);
+    public FilmSeanceTestDto findById(@PathVariable Integer id) {
+        Seance seance = seanceService.findById(id);
+        return objectMapper.convertValue(seance,FilmSeanceTestDto.class);
     }
 
     @DeleteMapping("/{id}")

@@ -1,7 +1,10 @@
 package fr.arheee.cinemalegrandcda.ticket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.arheee.cinemalegrandcda.seance.SeanceService;
+import fr.arheee.cinemalegrandcda.ticket.exceptions.SeanceNotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,10 +14,12 @@ import java.util.List;
 public class TicketController {
     private final TicketService ticketService;
     private final ObjectMapper objectMapper;
+    private final SeanceService seanceService;
     
-    public TicketController(TicketService ticketService, ObjectMapper objectMapper) {
+    public TicketController(TicketService ticketService, ObjectMapper objectMapper, SeanceService seanceService) {
         this.ticketService = ticketService;
         this.objectMapper = objectMapper;
+        this.seanceService = seanceService;
     }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
