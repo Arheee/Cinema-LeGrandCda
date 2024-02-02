@@ -1,8 +1,10 @@
 package fr.arheee.cinemalegrandcda.ticket;
 
+import fr.arheee.cinemalegrandcda.film.Film;
 import fr.arheee.cinemalegrandcda.film.exceptions.FilmNotFoundException;
 import fr.arheee.cinemalegrandcda.seance.Seance;
 import fr.arheee.cinemalegrandcda.seance.SeanceService;
+import fr.arheee.cinemalegrandcda.ticket.dto.TicketReduitDto;
 import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -58,6 +60,9 @@ public class TicketService {
         return ticketRepository.save(ticket);
     }
 
+    public List<Ticket> findBySeance(Seance seance) {
+        return ticketRepository.findBySeance(seance);
+    }
 
     public List<Ticket> findAll() {
 
@@ -81,4 +86,6 @@ public class TicketService {
     public Ticket update(Ticket ticket){
         return ticketRepository.save(ticket);
     }
+
+
 }
